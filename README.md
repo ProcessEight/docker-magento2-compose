@@ -18,6 +18,17 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
 * Make it possible to run multiple magento2-docker-compose installs without ports clashing
 
+## Docker development workflow
+ 
+ * Checkout this repo in a new folder, named after the feature you're implementing
+ * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
+
+If modifying the images:
+
+ * Modify the images accordingly and tag them with a new version
+ * Update the `docker-compose.yml` to use the new version of the image
+ * Once the feature has been completed, re-build the image with the `latest` tag
+
 ## Usage
 
 ### First-time
