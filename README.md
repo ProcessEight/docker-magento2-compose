@@ -9,7 +9,7 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Merge the copying of code from `/var/www/html` on the appdata to `html` on the host into the mage-setup-raw script 
 * Update service versions (e.g. Upgrade nginx to 1.13)
 * Add XDebug support
-* Install frontend tools (node, yarn, etc)
+* Install frontend tools (yarn, snowdog frontools, etc)
 * Update the environment variables
 * Add Windows support
 * Optimise the service configs for M2
@@ -18,25 +18,13 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
 * Make it possible to run multiple magento2-docker-compose installs without ports clashing
 
-## Docker development workflow
- 
- * Checkout this repo in a new folder, named after the feature you're implementing
- * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
-
-If modifying the images:
-
- * Modify the images accordingly and tag them with a new version
- * Update the `docker-compose.yml` to use the new version of the image
- * Once the feature has been completed, re-build the image with the `latest` tag
-
 ## Usage
 
 ### First-time
 
 This is a two-step process:
 
-* Build the images
-    * This creates M2-optimised versions of PHP, Nginx, MySQL images
+* Clone the repo
 * Run the `setup` container to setup the environment
     * This uses the images to create the environment and installs Magento 2 in a volume (data container)
 
@@ -134,3 +122,14 @@ magento cache:flush
 You can copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` and adjust environment variables, volume mounts etc in the `docker-compose.override.yml` file to avoid losing local configuration changes when you pull changes to this repository. 
 
 Docker Compose will automatically read any of the values you define in the file. See [this link](https://docs.docker.com/compose/extends/#/understanding-multiple-compose-files) for more information about the override file. 
+
+## Docker development workflow
+ 
+ * Checkout this repo in a new folder, named after the feature you're implementing
+ * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
+
+If modifying the images:
+
+ * Modify the images accordingly and tag them with a new version
+ * Update the `docker-compose.yml` to use the new version of the image
+ * Once the feature has been completed, re-build the image with the `latest` tag
