@@ -33,12 +33,19 @@ If modifying the images:
 
 ### First-time
 
-This is a two-step process:
-
-* Build the images
-    * This creates M2-optimised versions of PHP, Nginx, MySQL images
 * Run the `setup` container to setup the environment
-    * This uses the images to create the environment and installs Magento 2 in a volume (data container)
+    * This downloads the images if you don't already have them locally, to create the environment
+
+```bash
+$ docker-compose up -d setup
+```
+
+To install Magento 2:
+
+```
+$ docker-compose run --rm setup
+```
+This installs Magento 2 in a volume (data container).
 
 ### Every other time
 
@@ -77,17 +84,6 @@ Place your auth token at `~/.composer/auth.json` with the following contents, li
 ```
 
 Then, just set `M2SETUP_USE_ARCHIVE` to `false` in your docker-compose.yml file. 
-
-## First-time Setup
-
-Using the above `docker-compose.yml` file, all you need to do is run one line to install Magento 2:
-
-```
-docker-compose run --rm setup
-```
-
-This will 
-You may modify any environment variables depending on your requirements.
 
 ## Data Volumes
 
