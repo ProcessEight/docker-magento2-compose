@@ -9,7 +9,7 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Merge the copying of code from `/var/www/html` on the appdata to `html` on the host into the mage-setup-raw script 
 * Update service versions (e.g. Upgrade nginx to 1.13)
 * Add XDebug support
-* Install frontend tools (node, yarn, etc)
+* Install frontend tools (yarn, snowdog frontools, etc)
 * Update the environment variables
 * Add Windows support
 * Optimise the service configs for M2
@@ -33,6 +33,9 @@ If modifying the images:
 
 ### First-time
 
+This is a two-step process:
+
+* Clone the repo
 * Run the `setup` container to setup the environment
     * This downloads the images if you don't already have them locally, to create the environment
 
