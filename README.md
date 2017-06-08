@@ -5,7 +5,7 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 ## TODO
 
 * ~~Add ability to specify custom admin URI~~
-* Refactor mounting of `~/.composer/` into `COMPOSER_HOME` env var to make it platform agnostic and in order to get passwordless-install when installing via composer and make installing quicker
+* ~~Refactor mounting of `~/.composer/` into `COMPOSER_HOME` env var to make it platform agnostic and in order to get passwordless-install when installing via composer and make installing quicker~~
 * Merge the copying of code from `/var/www/html` on the appdata to `html` on the host into the mage-setup-raw script 
 * Update service versions (e.g. Upgrade nginx to 1.13)
 * Add XDebug support
@@ -13,10 +13,24 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Update the environment variables
 * Add Windows support
 * Optimise the service configs for M2
+    * Nginx
+    * ~~PHP~~
+    * MySQL
 * Add Redis support
 * Create a version for updating projects
 * Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
 * Make it possible to run multiple magento2-docker-compose installs without ports clashing
+
+## Docker development workflow
+ 
+ * Checkout this repo in a new folder, named after the feature you're implementing
+ * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
+
+If modifying the base images:
+
+ * Modify the images accordingly and tag them with a new version
+ * Update the `docker-compose.yml` to use the new version of the image
+ * Once the feature has been completed, re-build the image with the `latest` tag
 
 ## Usage
 
@@ -26,12 +40,34 @@ This is a two-step process:
 
 * Clone the repo
 * Run the `setup` container to setup the environment
-    * This uses the images to create the environment and installs Magento 2 in a volume (data container)
+    * This downloads the images if you don't already have them locally, to create the environment
+
+```bash
+$ docker-compose up -d setup
+```
+
+To install Magento 2:
+
+```
+$ docker-compose run --rm setup
+```
+This installs Magento 2 in a volume (data container).
 
 ### Every other time
 
-* Run the `app` container to run the environment:
+* Run the `app` container to start the environment:
 
+```bash
+$ docker-compose up -d app
+```
+
+### Switching projects
+
+* First, stop the containers using:
+```bash
+$ docker-compose stop
+```
+* Second, switch to the other project folder and start that environment:
 ```bash
 $ docker-compose up -d app
 ```
@@ -65,17 +101,6 @@ Place your auth token at `~/.composer/auth.json` with the following contents, li
 ```
 
 Then, just set `M2SETUP_USE_ARCHIVE` to `false` in your docker-compose.yml file. 
-
-## First-time Setup
-
-Using the above `docker-compose.yml` file, all you need to do is run one line to install Magento 2:
-
-```
-docker-compose run --rm setup
-```
-
-This will 
-You may modify any environment variables depending on your requirements.
 
 ## Data Volumes
 
@@ -122,14 +147,3 @@ magento cache:flush
 You can copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` and adjust environment variables, volume mounts etc in the `docker-compose.override.yml` file to avoid losing local configuration changes when you pull changes to this repository. 
 
 Docker Compose will automatically read any of the values you define in the file. See [this link](https://docs.docker.com/compose/extends/#/understanding-multiple-compose-files) for more information about the override file. 
-
-## Docker development workflow
- 
- * Checkout this repo in a new folder, named after the feature you're implementing
- * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
-
-If modifying the images:
-
- * Modify the images accordingly and tag them with a new version
- * Update the `docker-compose.yml` to use the new version of the image
- * Once the feature has been completed, re-build the image with the `latest` tag
