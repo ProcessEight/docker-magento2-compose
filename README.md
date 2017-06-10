@@ -36,22 +36,51 @@ If modifying the base images:
 
 ### First-time
 
-This is a two-step process:
-
-* Clone the repo
-* Run the `setup` container to setup the environment
-    * This downloads the images if you don't already have them locally, to create the environment
+* Clone the repo:
+```bash
+git clone git@github.com:ProjectEight/docker-magento2-compose.git magento2-project
+```
+* Run the `setup` container to setup the environment. This downloads the images if you don't already have them locally, to create the environment
 
 ```bash
 $ docker-compose up -d setup
 ```
 
-To install Magento 2:
+Modify the `env/setup.env` file to suit the project requirements:
 
+```bash
+M2SETUP_DB_HOST=db
+M2SETUP_DB_NAME=magento2
+M2SETUP_DB_USER=magento2
+M2SETUP_DB_PASSWORD=magento2
+M2SETUP_BASE_URL=http://magento2-project.dev:8000/
+M2SETUP_ADMIN_FIRSTNAME=Admin
+M2SETUP_ADMIN_LASTNAME=User
+M2SETUP_ADMIN_EMAIL=admin@example.com
+M2SETUP_ADMIN_USER=admin
+M2SETUP_ADMIN_PASSWORD=password123
+M2SETUP_ADMIN_URI=admin
+M2SETUP_CURRENCY=GBP
+M2SETUP_LANGUAGE=en_GB
+M2SETUP_TIMEZONE=Europe/London
+M2SETUP_VERSION=2.1.6
+M2SETUP_USE_SAMPLE_DATA=false
+M2SETUP_USE_COMPOSER_ENTERPRISE=false
 ```
+
+Now we're ready to install Magento 2:
+
+```bash
 $ docker-compose run --rm setup
 ```
+
 This installs Magento 2 in a volume (data container).
+
+Finally, modify your hosts file:
+
+```bash
+$ sudo echo "127.0.0.1       magento2-project.dev" >> /etc/hosts
+```
 
 ### Every other time
 
@@ -63,11 +92,14 @@ $ docker-compose up -d app
 
 ### Switching projects
 
-* First, stop the containers using:
+* First, stop `docker-compose` using:
+
 ```bash
 $ docker-compose stop
 ```
+
 * Second, switch to the other project folder and start that environment:
+
 ```bash
 $ docker-compose up -d app
 ```
@@ -89,7 +121,7 @@ Uncomment the composer line from `appdata` to mount a `.composer` directory to t
 
 Place your auth token at `~/.composer/auth.json` with the following contents, like so:
 
-```
+```json
 {
     "http-basic": {
         "repo.magento.com": {
@@ -106,13 +138,13 @@ Then, just set `M2SETUP_USE_ARCHIVE` to `false` in your docker-compose.yml file.
 
 Your Magento source data is persistently stored within Docker data volumes. For local development, we advise copying the entire contents of the `appdata` data volume to your local machine (after setup is complete of course). Since you shouldn't be modifying any of these files, this is just to bring the fully copy of the site back to your host:
 
-```
+```bash
 docker cp CONTAINERID:/var/www/html ./
 ```
 
 Then, just uncomment the `./html/app/code:/var/www/html/app/code` and `./html/app/design:/var/www/html/app/design` lines within your docker-compose.override.yml file (appdata > volumes). This mounts your local `app/code` and `app/design` directories to the Docker data volume. Then, just restart your containers:
 
-```
+```bash
 docker-compose up -d app
 ```
 
@@ -122,23 +154,23 @@ Any edits to these directories will correctly sync with your Docker volume.
 
 We've setup scripts to aid in the running of Magento CLI tool with the correct permissions. To run the command line tool, you would connect as any other Docker Compose application would:
 
-```
+```bash
 docker-compose exec phpfpm ./bin/magento
 ```
 
 or with straight Docker command:
-```
+```bash
 docker exec NAME_OF_PHPFPM_CONTAINER ./bin/magento
 ```
 
 You can easily set these up as aliases inside your `~/.bash_profile` file (or a similar script) as so:
 
-```
+```bash
 alias magento='docker-compose exec phpfpm ./bin/magento'
 ```
 This will allow you to clear the cache by running the following command right in terminal:
 
-```
+```bash
 magento cache:flush
 ```
 
