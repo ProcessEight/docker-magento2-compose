@@ -40,33 +40,37 @@ If modifying the base images:
 ```bash
 git clone git@github.com:ProjectEight/docker-magento2-compose.git magento2-project
 ```
-* Run the `setup` container to setup the environment. This downloads the images if you don't already have them locally, to create the environment
+* Run the `setup` container to setup the environment. This downloads the images if you don't already have them locally and then creates all the containers.
 
 ```bash
 $ docker-compose up -d setup
 ```
 
-Modify the `env/setup.env` file to suit the project requirements:
+The `-d` flag tells Docker Compose to run all the containers in the background.
+
+Now modify the `env/setup.env` file to suit the project requirements:
 
 ```bash
-M2SETUP_DB_HOST=db
-M2SETUP_DB_NAME=magento2
-M2SETUP_DB_USER=magento2
-M2SETUP_DB_PASSWORD=magento2
-M2SETUP_BASE_URL=http://magento2-project.dev:8000/
-M2SETUP_ADMIN_FIRSTNAME=Admin
-M2SETUP_ADMIN_LASTNAME=User
-M2SETUP_ADMIN_EMAIL=admin@example.com
-M2SETUP_ADMIN_USER=admin
-M2SETUP_ADMIN_PASSWORD=password123
-M2SETUP_ADMIN_URI=admin
-M2SETUP_CURRENCY=GBP
-M2SETUP_LANGUAGE=en_GB
-M2SETUP_TIMEZONE=Europe/London
-M2SETUP_VERSION=2.1.6
-M2SETUP_USE_SAMPLE_DATA=false
-M2SETUP_USE_COMPOSER_ENTERPRISE=false
+MAGENTO2_DB_HOST=db
+MAGENTO2_DB_NAME=magento2
+MAGENTO2_DB_USER=magento2
+MAGENTO2_DB_PASSWORD=magento2
+MAGENTO2_BASE_URL=http://magento2-project.dev:8000/
+MAGENTO2_ADMIN_FIRSTNAME=Admin
+MAGENTO2_ADMIN_LASTNAME=User
+MAGENTO2_ADMIN_EMAIL=admin@example.com
+MAGENTO2_ADMIN_USER=admin
+MAGENTO2_ADMIN_PASSWORD=password123
+MAGENTO2_ADMIN_URI=admin
+MAGENTO2_CURRENCY=GBP
+MAGENTO2_LANGUAGE=en_GB
+MAGENTO2_TIMEZONE=Europe/London
+MAGENTO2_VERSION=2.1.6
+MAGENTO2_USE_SAMPLE_DATA=false
+MAGENTO2_USE_COMPOSER_ENTERPRISE=false
 ```
+
+Do the same for `env/mysql.env`.
 
 Now we're ready to install Magento 2:
 
@@ -74,9 +78,11 @@ Now we're ready to install Magento 2:
 $ docker-compose run --rm setup
 ```
 
-This installs Magento 2 in a volume (data container).
+This ties all the containers we just created together and also installs Magento 2 in a volume (data container).
 
-Finally, modify your hosts file:
+The `--rm` flag tells Docker to remove the `setup` container after it has finished executing the commands defined in the `RUN` section of the Dockerfile.
+
+Finally, modify the hosts file on your host (not inside the container):
 
 ```bash
 $ sudo echo "127.0.0.1       magento2-project.dev" >> /etc/hosts
@@ -125,14 +131,14 @@ Place your auth token at `~/.composer/auth.json` with the following contents, li
 {
     "http-basic": {
         "repo.magento.com": {
-            "username": "MAGENTO_PUBLIC_KEY",
-            "password": "MAGENTO_PRIVATE_KEY"
+            "username": "MAGENTO2_PUBLIC_KEY",
+            "password": "MAGENTO2_PRIVATE_KEY"
         }
     }
 }
 ```
 
-Then, just set `M2SETUP_USE_ARCHIVE` to `false` in your docker-compose.yml file. 
+Then, just set `MAGENTO2_USE_ARCHIVE` to `false` in your docker-compose.yml file. 
 
 ## Data Volumes
 
