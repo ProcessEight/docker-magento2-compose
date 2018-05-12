@@ -11,7 +11,6 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 * Add XDebug support
 * Install frontend tools (yarn, snowdog frontools, etc)
 * Update the environment variables
-* Add Windows support
 * Optimise the service configs for M2
     * Nginx
     * ~~PHP~~
@@ -108,13 +107,6 @@ $ docker-compose stop
 $ docker-compose up -d app
 ```
 
-### Windows
-
-It's best to run this on Windows 10 with `Docker for Windows`, otherwise the performance of the container may be unacceptably slow.
-
-* Install `Docker for Windows`
-* If the installer asks you to enable `Hyper-V` then select Yes.
-
 ## In detail
 
 ### Composer Setup
@@ -135,8 +127,6 @@ Place your auth token at `~/.composer/auth.json` with the following contents, li
     }
 }
 ```
-
-Then, just set `MAGENTO2_USE_ARCHIVE` to `false` in your docker-compose.yml file. 
 
 ## Data Volumes
 
