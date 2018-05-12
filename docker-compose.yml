@@ -15,6 +15,9 @@ appdata:
   image: tianon/true
   volumes:
     - /var/www/html
+    # Required to install M2 without username/password prompt
+    # Replace the first part (before the colon) with the path to the COMPOSER_HOME folder on the host
+#    - /home/zone8/.composer:/var/www/.composer
 
 phpfpm:
   image: projecteight/php7.0-fpm:latest
