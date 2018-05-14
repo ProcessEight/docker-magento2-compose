@@ -2,35 +2,6 @@
 
 A proof-of-concept repo for dockerising a Magento 2 development environment.
 
-## TODO
-
-* ~~Add ability to specify custom admin URI~~
-* ~~Refactor mounting of `~/.composer/` into `COMPOSER_HOME` env var to make it platform agnostic and in order to get passwordless-install when installing via composer and make installing quicker~~
-* Merge the copying of code from `/var/www/html` on the appdata to `html` on the host into the mage-setup-raw script 
-* Update service versions (e.g. Upgrade nginx to 1.13)
-* Add XDebug support
-* Install frontend tools (yarn, snowdog frontools, etc)
-* Update the environment variables
-* Optimise the service configs for M2
-    * Nginx
-    * ~~PHP~~
-    * MySQL
-* Add Redis support
-* Create a version for updating projects
-* Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
-* Make it possible to run multiple magento2-docker-compose installs without ports clashing
-
-## Docker development workflow
- 
- * Checkout this repo in a new folder, named after the feature you're implementing
- * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
-
-If modifying the base images:
-
- * Modify the images accordingly and tag them with a new version
- * Update the `docker-compose.yml` to use the new version of the image
- * Once the feature has been completed, re-build the image with the `latest` tag
-
 ## Usage
 
 ### First-time
@@ -173,3 +144,35 @@ magento cache:flush
 You can copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` and adjust environment variables, volume mounts etc in the `docker-compose.override.yml` file to avoid losing local configuration changes when you pull changes to this repository. 
 
 Docker Compose will automatically read any of the values you define in the file. See [this link](https://docs.docker.com/compose/extends/#/understanding-multiple-compose-files) for more information about the override file. 
+
+## TODO
+
+* ~~Add ability to specify custom admin URI~~
+* ~~Refactor mounting of `~/.composer/` into `COMPOSER_HOME` env var to make it platform agnostic and in order to get passwordless-install when installing via composer and make installing quicker~~
+* Merge the copying of code from `/var/www/html` on the appdata to `html` on the host into the mage-setup-raw script 
+* Update service versions (e.g. Upgrade nginx to 1.13)
+* Add XDebug support
+* Install frontend tools (yarn, snowdog frontools, etc)
+* Update the environment variables
+* Optimise the service configs for M2
+    * Nginx
+    * ~~PHP~~
+    * MySQL
+* Add Redis support
+* Create a version for updating projects
+* Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
+* Make it possible to run multiple magento2-docker-compose installs without ports clashing
+
+## Workflow for adding new features to `docker-magento2-compose`
+ 
+ * Checkout this repo in a new folder, named after the feature you're implementing
+ * Modify the `docker-compose.yml` and `env` files accordingly to support your new feature (if necessary)
+ * Run `$ docker-compose run --rm setup` to generate the environment
+ * Run `$ docker-compose up -d app` to run the environment
+
+If modifying the base images:
+
+ * Modify the images accordingly and tag them with a new version
+ * Update the `docker-compose.yml` to use the new version of the image
+ * Once the feature has been completed, re-build the image with the `latest` tag
+ * You may need to run `docker-composer down` to destroy any previously built images and force Docker Compose to use the newly built image(s)
