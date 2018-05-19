@@ -56,13 +56,27 @@ Finally, modify the hosts file on your host (not inside the container):
 $ sudo echo "127.0.0.1       magento2-project.dev" >> /etc/hosts
 ```
 
-You can now go to `M2SETUP_BASE_URL` in your browser.
+You can now go to `MAGENTO2_BASE_URL` in your browser.
 
 #### Where's the code?
 
 The Magento 2 core code is installed inside the container, so it won't be present on the host.
 
-Before you can start developing, 
+For local development, copy the contents of the `appdata` data volume to the host. This will enable code completion features in your IDE.
+
+#### Working with git
+
+Create a new git repo locally:
+
+```bash
+git init
+```
+
+Now add the remote repo as a remote:
+
+```bash
+git remote add <remote-name> <remote-clone-url>
+```
 
 ### Every other time
 
@@ -71,6 +85,14 @@ Before you can start developing,
 ```bash
 $ docker-compose up -d app
 ```
+
+* Once you've finished working on a project, stop the containers:
+
+```bash
+$ docker-compose stop
+```
+
+If you use `docker-compose down`, all the containers (including data containers) will be destroyed and you will need to follow the 'First time' steps to work with the project again.
 
 ### Switching projects
 
@@ -109,11 +131,13 @@ Place your auth token at `~/.composer/auth.json` with the following contents, li
 
 ## Data Volumes
 
-Your Magento source data is persistently stored within Docker data volumes. For local development, we advise copying the entire contents of the `appdata` data volume to your local machine (after setup is complete of course). Since you shouldn't be modifying any of these files, this is just to bring the fully copy of the site back to your host:
+The Magento core code is stored within the `appdata` data volume. 
 
 ```bash
 docker cp CONTAINERID:/var/www/html ./
 ```
+
+You can find the `CONTAINERID` by running the command `docker ps`.
 
 Then, just uncomment the `./html/app/code:/var/www/html/app/code` and `./html/app/design:/var/www/html/app/design` lines within your docker-compose.override.yml file (appdata > volumes). This mounts your local `app/code` and `app/design` directories to the Docker data volume. Then, just restart your containers:
 
