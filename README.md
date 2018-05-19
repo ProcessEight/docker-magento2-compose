@@ -56,6 +56,14 @@ Finally, modify the hosts file on your host (not inside the container):
 $ sudo echo "127.0.0.1       magento2-project.dev" >> /etc/hosts
 ```
 
+You can now go to `M2SETUP_BASE_URL` in your browser.
+
+#### Where's the code?
+
+The Magento 2 core code is installed inside the container, so it won't be present on the host.
+
+Before you can start developing, 
+
 ### Every other time
 
 * Run the `app` container to start the environment:
