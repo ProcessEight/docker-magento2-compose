@@ -17,7 +17,10 @@ appdata:
     - /var/www/html
     # Required to install M2 without username/password prompt
     # Replace the first part (before the colon) with the path to the COMPOSER_HOME folder on the host
-#    - /home/zone8/.composer:/var/www/.composer
+    # - /home/zone8/.composer:/var/www/.composer
+    # Map app/code and app/design folders on host to locations in the container
+    - ./html/app/code:/var/www/html/app/code
+    - ./html/app/design:/var/www/html/app/design
 
 phpfpm:
   image: projecteight/php7.0-fpm:latest
