@@ -149,22 +149,24 @@ Any edits to these directories will correctly sync with your Docker volume.
 
 ## Running Magento CLI tool
 
-We've setup scripts to aid in the running of Magento CLI tool with the correct permissions. To run the command line tool, you would connect as any other Docker Compose application would:
+To run the command line tool, use the PHP container to run the command:
 
 ```bash
-docker-compose exec phpfpm ./bin/magento
+docker-compose exec NAME_OF_PHPFPM_CONTAINER ./bin/magento
 ```
 
-or with straight Docker command:
+or by using Docker:
+
 ```bash
 docker exec NAME_OF_PHPFPM_CONTAINER ./bin/magento
 ```
 
-You can easily set these up as aliases inside your `~/.bash_profile` file (or a similar script) as so:
+You can easily set these up as aliases inside your `~/.bash_aliases` file (or a similar script) as so:
 
 ```bash
 alias magento='docker-compose exec phpfpm ./bin/magento'
 ```
+
 This will allow you to clear the cache by running the following command right in terminal:
 
 ```bash
@@ -194,6 +196,8 @@ Docker Compose will automatically read any of the values you define in the file.
 * Create a version for updating projects
 * Lint Dockerfiles using [FROM:latest](https://www.fromlatest.io/)
 * Make it possible to run multiple magento2-docker-compose installs without ports clashing
+* Replace `tianon/true` image 
+* Replace the necessity of running the setup container a second time to setup Magento - migrate it into a bash script running on the host
 
 ## Workflow for adding new features to `docker-magento2-compose`
  
