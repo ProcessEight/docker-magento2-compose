@@ -8,7 +8,7 @@ A proof-of-concept repo for dockerising a Magento 2 development environment.
 
 * Clone the repo:
 ```bash
-git clone git@github.com:ProjectEight/docker-magento2-compose.git magento2-project
+git clone git clone git@bitbucket.org:purenetgit/purenet-magento2-setup-docker.git new-magento2-project
 ```
 * Run the `setup` container to setup the environment. This downloads the images if you don't already have them locally and then creates all the containers.
 
@@ -25,7 +25,7 @@ MAGENTO2_DB_HOST=db
 MAGENTO2_DB_NAME=magento2
 MAGENTO2_DB_USER=magento2
 MAGENTO2_DB_PASSWORD=magento2
-MAGENTO2_BASE_URL=http://magento2-project.dev:8000/
+MAGENTO2_BASE_URL=http://new-magento2-project.dev:8000/
 MAGENTO2_ADMIN_FIRSTNAME=Admin
 MAGENTO2_ADMIN_LASTNAME=User
 MAGENTO2_ADMIN_EMAIL=admin@example.com
@@ -53,10 +53,26 @@ The `--rm` flag tells Docker to remove the `setup` container after it has finish
 Finally, modify the hosts file on your host (not inside the container):
 
 ```bash
-$ sudo echo "127.0.0.1       magento2-project.dev" >> /etc/hosts
+$ sudo echo "127.0.0.1       new-magento2-project.dev" >> /etc/hosts
 ```
 
 You can now go to `MAGENTO2_BASE_URL` in your browser.
+
+### Every other time
+
+* Run the `app` container to start the environment:
+
+```bash
+$ docker-compose up -d app
+```
+
+* Once you've finished working on a project, stop the containers:
+
+```bash
+$ docker-compose stop
+```
+
+If you use `docker-compose down`, all the containers (including data containers) will be destroyed and you will need to follow the 'First time' steps to work with the project again.
 
 #### Where's the code?
 
@@ -77,22 +93,6 @@ Now add the remote repo as a remote:
 ```bash
 git remote add <remote-name> <remote-clone-url>
 ```
-
-### Every other time
-
-* Run the `app` container to start the environment:
-
-```bash
-$ docker-compose up -d app
-```
-
-* Once you've finished working on a project, stop the containers:
-
-```bash
-$ docker-compose stop
-```
-
-If you use `docker-compose down`, all the containers (including data containers) will be destroyed and you will need to follow the 'First time' steps to work with the project again.
 
 ### Switching projects
 
@@ -164,20 +164,14 @@ docker exec NAME_OF_PHPFPM_CONTAINER ./bin/magento
 You can easily set these up as aliases inside your `~/.bash_aliases` file (or a similar script) as so:
 
 ```bash
-alias magento='docker-compose exec phpfpm ./bin/magento'
+alias m2='docker-compose exec phpfpm ./bin/magento'
 ```
 
 This will allow you to clear the cache by running the following command right in terminal:
 
 ```bash
-magento cache:flush
+m2 cache:flush
 ```
-
-## Docker Compose Override
-
-You can copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` and adjust environment variables, volume mounts etc in the `docker-compose.override.yml` file to avoid losing local configuration changes when you pull changes to this repository. 
-
-Docker Compose will automatically read any of the values you define in the file. See [this link](https://docs.docker.com/compose/extends/#/understanding-multiple-compose-files) for more information about the override file. 
 
 ## TODO
 
